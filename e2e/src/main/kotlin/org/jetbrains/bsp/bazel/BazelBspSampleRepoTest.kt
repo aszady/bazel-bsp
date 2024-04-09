@@ -125,6 +125,15 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
     )
     scalaTargetsScalaBinarySources.roots = listOf("file://\$WORKSPACE/")
 
+    val scalaTargetsScalaBinary3Scala = SourceItem(
+      "file://\$WORKSPACE/scala_targets/ScalaBinary3.scala", SourceItemKind.FILE, false
+    )
+    val scalaTargetsScalaBinary3Sources = SourcesItem(
+      BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"),
+      listOf(scalaTargetsScalaBinary3Scala)
+    )
+    scalaTargetsScalaBinary3Sources.roots = listOf("file://\$WORKSPACE/")
+
     val scalaTargetsScalaTestScala = SourceItem(
       "file://\$WORKSPACE/scala_targets/ScalaTest.scala", SourceItemKind.FILE, false
     )
@@ -255,6 +264,7 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
         targetWithResourcesSources,
         targetWithDependencySources,
         scalaTargetsScalaBinarySources,
+        scalaTargetsScalaBinary3Sources,
         scalaTargetsScalaTestSources,
         javaTargetsJavaBinarySources,
         javaTargetsJavaBinaryWithFlagSources,
@@ -298,6 +308,8 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
     )
     val scalaTargetsScalaBinary =
       ResourcesItem(BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary"), emptyList())
+    val scalaTargetsScalaBinary3 =
+      ResourcesItem(BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"), emptyList())
     val scalaTargetsScalaTest =
       ResourcesItem(BuildTargetIdentifier("$targetPrefix//scala_targets:scala_test"), emptyList())
     val targetWithDependencyJavaBinary = ResourcesItem(
@@ -337,6 +349,7 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
         javaTargetsJavaLibrary,
         javaTargetsJavaLibraryExported,
         scalaTargetsScalaBinary,
+        scalaTargetsScalaBinary3,
         scalaTargetsScalaTest,
         targetWithDependencyJavaBinary,
         targetWithoutArgsBinary,
@@ -386,6 +399,14 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
         )
       )
     )
+    val scalaTargetsScalaBinary3 = ScalaMainClassesItem(
+      BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"),
+      listOf(
+        ScalaMainClass(
+          "example.Example", emptyList(), emptyList()
+        )
+      )
+    )
     val targetWithoutJvmFlagsBinary = ScalaMainClassesItem(
       BuildTargetIdentifier("$targetPrefix//target_without_jvm_flags:binary"),
       listOf(ScalaMainClass("example.Example", listOf("arg1", "arg2"), emptyList()))
@@ -410,7 +431,7 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
     //  But how can I even populate it?
     //  Apparently it is populated in JVM run environment?
     val expectedScalaMainClassesResult = ScalaMainClassesResult(
-      listOf(scalaTargetsScalaBinary, targetWithoutJvmFlagsBinary, targetWithoutArgsBinary, manualTargetScalaBinary)
+      listOf(scalaTargetsScalaBinary, scalaTargetsScalaBinary3, targetWithoutJvmFlagsBinary, targetWithoutArgsBinary, manualTargetScalaBinary)
     )
     return BazelBspTestScenarioStep(
       "Scala main classes"
@@ -469,6 +490,9 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
     val scalaTargetsScalaBinary = DependencySourcesItem(
       BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary"), emptyList()
     )
+    val scalaTargetsScalaBinary3 = DependencySourcesItem(
+      BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"), emptyList()
+    )
     val scalaTargetsScalaTest = DependencySourcesItem(
       BuildTargetIdentifier("$targetPrefix//scala_targets:scala_test"), emptyList()
     )
@@ -519,6 +543,7 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
         targetWithDependencyJavaBinary,
         javaTargetsSubpackageJavaLibrary,
         scalaTargetsScalaBinary,
+        scalaTargetsScalaBinary3,
         scalaTargetsScalaTest,
         targetWithResourcesJavaBinary,
         targetWithoutArgsBinary,
@@ -610,6 +635,18 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
           mapOf()
         ).apply {
           mainClasses = listOf(JvmMainClass("example.Example", listOf("arg1", "arg2")))
+        },
+        JvmEnvironmentItem(
+          BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"),
+          listOf(
+            "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_2_3_3_1/scala-library-2.13.5.jar",
+            "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_3_3_1/scala3-library_3-3.3.1.jar"
+          ),
+          emptyList(),
+          "\$WORKSPACE",
+          mapOf()
+        ).apply {
+          mainClasses = listOf(JvmMainClass("example.Example", emptyList()))
         },
         JvmEnvironmentItem(
           BuildTargetIdentifier("$targetPrefix//scala_targets:scala_test"),
@@ -849,6 +886,18 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
           mainClasses = listOf(JvmMainClass("example.Example", listOf("arg1", "arg2")))
         },
         JvmEnvironmentItem(
+          BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"),
+          listOf(
+            "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_3_3_1/scala3-library_3-3.3.1.jar",
+            "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_2_3_3_1/scala-library-2.13.5.jar"
+          ),
+          emptyList(),
+          "\$WORKSPACE",
+          mapOf()
+        ).apply {
+          mainClasses = listOf(JvmMainClass("example.Example", emptyList()))
+        },
+        JvmEnvironmentItem(
           BuildTargetIdentifier("$targetPrefix//scala_targets:scala_test"),
           listOf(
             "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_2_12_18/scala-library-2.12.18.jar",
@@ -1070,6 +1119,18 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
       )
     )
     scalaBuildTarget.jvmBuildTarget = jvmBuildTarget
+    val scalaBuildTarget3 = ScalaBuildTarget(
+      "org.scala-lang",
+      "3.3.1",
+      "3.3",
+      ScalaPlatform.JVM,
+      listOf(
+        "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_compiler_3_3_1/scala3-compiler_3-3.3.1.jar",
+        "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_3_3_1/scala3-library_3-3.3.1.jar",
+        "file://\$BAZEL_OUTPUT_BASE_PATH/external/io_bazel_rules_scala_scala_library_2_3_3_1/scala-library-2.13.5.jar"
+      )
+    )
+    scalaBuildTarget3.jvmBuildTarget = jvmBuildTarget
 
     val scalaTargetsScalaBinary = BuildTarget(
       BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary"),
@@ -1086,6 +1147,22 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
     scalaTargetsScalaBinary.baseDirectory = "file://\$WORKSPACE/scala_targets/"
     scalaTargetsScalaBinary.dataKind = "scala"
     scalaTargetsScalaBinary.data = scalaBuildTarget
+
+    val scalaTargetsScalaBinary3 = BuildTarget(
+      BuildTargetIdentifier("$targetPrefix//scala_targets:scala_binary_3"),
+      listOf("application"),
+      listOf("scala"),
+      listOf(
+        BuildTargetIdentifier("scala3-compiler_3-3.3.1.jar"),
+        BuildTargetIdentifier("scala3-library_3-3.3.1.jar"),
+        BuildTargetIdentifier("scala-library-2.13.5.jar"),
+      ),
+      BuildTargetCapabilities().also { it.canCompile = true; it.canTest = false; it.canRun = true; it.canDebug = true }
+    )
+    scalaTargetsScalaBinary3.displayName = "$targetPrefix//scala_targets:scala_binary_3"
+    scalaTargetsScalaBinary3.baseDirectory = "file://\$WORKSPACE/scala_targets/"
+    scalaTargetsScalaBinary3.dataKind = "scala"
+    scalaTargetsScalaBinary3.data = scalaBuildTarget3
 
     val javaTargetsSubpackageSubpackage = BuildTarget(
       BuildTargetIdentifier("$targetPrefix//java_targets/subpackage:java_library"),
@@ -1346,6 +1423,7 @@ object BazelBspSampleRepoTest : BazelBspTestBaseScenario() {
         javaTargetsJavaBinary,
         javaTargetsJavaBinaryWithFlag,
         scalaTargetsScalaBinary,
+        scalaTargetsScalaBinary3,
         javaTargetsSubpackageSubpackage,
         javaTargetsJavaLibrary,
         targetWithoutJvmFlagsBinary,

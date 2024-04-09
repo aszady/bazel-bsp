@@ -18,3 +18,10 @@ scala_test(
     srcs = ["ScalaTest.scala"],
     visibility = ["//visibility:public"],
 )
+
+scala_binary(
+    name = "scala_binary_3",
+    srcs = ["ScalaBinary3.scala"],
+    main_class = "example.Example",
+    scala_version = "3.3.1",
+)
