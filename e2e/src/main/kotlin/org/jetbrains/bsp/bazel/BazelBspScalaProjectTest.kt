@@ -43,8 +43,8 @@ object BazelBspScalaProjectTest : BazelBspTestBaseScenario() {
         it,
         emptyList(),
         listOf(
-          "file://\$BAZEL_OUTPUT_BASE_PATH/execroot/__main__/bazel-out/k8-fastbuild/bin/external/io_bazel_rules_scala_scala_library/io_bazel_rules_scala_scala_library.stamp/scala-library-2.13.6-stamped.jar",
-          "file://\$BAZEL_OUTPUT_BASE_PATH/execroot/__main__/bazel-out/k8-fastbuild/bin/external/io_bazel_rules_scala_scala_reflect/io_bazel_rules_scala_scala_reflect.stamp/scala-reflect-2.13.6-stamped.jar"
+          "file://\$BAZEL_OUTPUT_BASE_PATH/execroot/__main__/bazel-out/k8-fastbuild/bin/external/io_bazel_rules_scala_scala_library_2_12_18/io_bazel_rules_scala_scala_library.stamp/scala-library-2.13.6-stamped.jar",
+          "file://\$BAZEL_OUTPUT_BASE_PATH/execroot/__main__/bazel-out/k8-fastbuild/bin/external/io_bazel_rules_scala_scala_reflect_2_12_18/io_bazel_rules_scala_scala_reflect.stamp/scala-reflect-2.13.6-stamped.jar"
         ),
         "file://\$BAZEL_OUTPUT_BASE_PATH/execroot/__main__/bazel-out/k8-fastbuild/bin/scala_targets/library.jar"
       )
